@@ -16,24 +16,25 @@ from pyspark.sql.functions import expr
 from pyspark.sql.types import StructType, StructField, StringType, FloatType
 #from pyspark.sql.streaming import StreamingQuery
 
-class SparkKafkaConsumer:
+class SparkKafkaConsumer: #class to fetch the data from kafka
     def __init__(self, kafka_bootstrap_servers, kafka_topic):
-        self.kafka_bootstrap_servers = kafka_bootstrap_servers
-        self.kafka_topic = kafka_topic
+        self.kafka_bootstrap_servers = kafka_bootstrap_servers 
+        self.kafka_topic = kafka_topic 
         self.spark = self.start_spark_session()
 
-    def start_spark_session(self):
+    def start_spark_session(self): #method creates the Spark session and configures it to work with Kafka
         return SparkSession.builder \
             .appName("KafkaWeatherConsumer") \
-            .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \
-            .getOrCreate()
+            .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \ #configures the Spark session to include the required package for integrating Spark with Kafka. 
+        #This package allows Spark to read and write data from/to Kafka topics
+            .getOrCreate() #either retrieves an existing Spark session or creates a new one if it doesn't exist.
 
-    def read_from_kafka(self):
+    def read_from_kafka(self):# method to continuously read data from a specified Kafka topic.
         return self.spark.readStream \
-            .format("kafka") \
+            .format("kafka") \ # specifies that you're reading from a Kafka source, so that partitions are preserved
             .option("kafka.bootstrap.servers", self.kafka_bootstrap_servers) \
             .option("subscribe", self.kafka_topic) \
-            .load()
+            .load() #initiates the process of loading data from the Kafka topic as a streaming DataFrame
 
     def process_data(self):
         # Define schema for the DataFrame
