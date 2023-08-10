@@ -3,7 +3,7 @@ In this script a class to produce a kafka topic and send the data to kafka is cr
 Inside this topic, partitions are made to be equivalent to the number of PAOI we have.
 Finally the dictionary of the meteo.py script is sent through this class to kafka
 '''
-from confluent_kafka import Producer #check your broker kafka version. It must be >= v0.8
+from confluent_kafka import Producer #check your broker kafka version. It must be >= v0.8 to use confluent kafka
 import json
 from meteo import weather_data_dict
 
